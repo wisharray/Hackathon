@@ -71,11 +71,25 @@
 <script>
 
 const SPOTS = [
-  { name: "Moffitt Library",        address: "350 Moffitt Library, Berkeley, CA 94720", lat: 37.87248, lng: -122.26086 },
-  { name: "Doe Library",            address: "Doe Library, Berkeley, CA 94720",          lat: 37.87250, lng: -122.25940 },
-  { name: "Kresge Engineering Library", address: "110 Bechtel Engineering Center, Berkeley, CA 94720", lat: 37.87390, lng: -122.25890 },
-  { name: "Main Stacks / Morrison",  address: "Morrison Library, Berkeley, CA 94720",    lat: 37.87290, lng: -122.25985 },
-  { name: "Cafe Strada",            address: "2300 College Ave, Berkeley, CA 94704",    lat: 37.86795, lng: -122.25965 } 
+  { name: "Bancroft Library", address: "Doe Library, University of California, Berkeley, CA 94720", lat: 37.87215, lng: -122.25975 },
+  { name: "Environmental Design Library", address: "210 Wurster Hall, Berkeley, CA 94720", lat: 37.87062, lng: -122.25477 },
+  { name: "Main (Gardner) Stacks", address: "Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 },
+  { name: "Morrison Library", address: "101 Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 },
+  { name: "Art History/Classics Library", address: "308 Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 },
+  { name: "Marian Koshland Bioscience, Natural Resources & Public Health Library", address: "2101 Valley Life Sciences Bldg, Berkeley, CA 94720", lat: 37.87150, lng: -122.26210 },
+  { name: "Thomas J. Long Business and Economics Library", address: "S540 Student Services Bldg, Haas School of Business, Berkeley, CA 94720", lat: 37.87140, lng: -122.25330 },
+  { name: "Ethnic Studies Library", address: "30 Stephens Hall, Berkeley, CA 94720", lat: 37.87148, lng: -122.25760 },
+  { name: "Chemistry, Astronomy & Physics Library", address: "100 Hildebrand Hall, Berkeley, CA 94720", lat: 37.87220, lng: -122.25580 },
+  { name: "Earth Sciences & Map Library", address: "50 McCone Hall, Berkeley, CA 94720", lat: 37.87370, lng: -122.25950 },
+  { name: "Institute of Governmental Studies Library", address: "109 Moses Hall, Berkeley, CA 94720", lat: 37.87110, lng: -122.25850 },
+  { name: "C.V. Starr East Asian Library", address: "1 Starr East Asian Library Bldg, Berkeley, CA 94720", lat: 37.87340, lng: -122.25940 },
+  { name: "Grimes Engineering Library", address: "110 Bechtel Engineering Center, Berkeley, CA 94720", lat: 37.87410, lng: -122.25830 },
+  { name: "Graduate Services", address: "208 Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 },
+  { name: "Northern Regional Library Facility", address: "Bldg 400, Richmond Field Station, 1301 S 46th St, Richmond, CA 94804", lat: 37.91738, lng: -122.33597 },
+  { name: "Newspapers & Microforms Library", address: "40 Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 },
+  { name: "Jean Gray Hargrove Music Library", address: "1 Hargrove Music Library, Berkeley, CA 94720", lat: 37.87090, lng: -122.25560 },
+  { name: "Social Research Library", address: "227 Haviland Hall, Berkeley, CA 94720", lat: 37.87320, lng: -122.26050 },
+  { name: "South/Southeast Asia Library", address: "120 Doe Library, Berkeley, CA 94720", lat: 37.87232, lng: -122.25938 } 
 ];
 
 function haversine(lat1, lon1, lat2, lon2) {
