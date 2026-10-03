@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SpotScout</title>
 <style>
+  #map-wrap { margin: 0 0 28px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #fff; }
+  #map { display: block; width: 100%; height: 380px; border: 0; }
+  #map-caption { margin: 0; padding: 8px 12px; font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line); }
+  @media (max-width: 480px) { #map { height: 300px; } }
   :root {
     --bg: #f3f5f1;
     --ink: #1d2a24;
@@ -39,7 +43,7 @@
   }
   button:focus-visible, .btn:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
   #status { margin: 18px 0; color: var(--muted); font-family: system-ui, sans-serif; }
-  #result { display: none; border-left: 6px solid var(--gold); background: #fff; padding: 18px 20px; margin-bottom: 28px; }
+  #result { display: none; border-left: 6px solid var(--gold); background: #fff; padding: 18px 20px; margin-bottom: 20px; }
   #result h2 { margin: 0 0 4px; font-size: 1.4rem; }
   #result .addr, #result .dist { margin: 0; color: var(--muted); font-family: system-ui, sans-serif; font-size: .95rem; }
   #result .btn { margin-top: 14px; }
@@ -50,7 +54,6 @@
 </style>
 </head>
 <body>
-<nav style="background: #fff; border-bottom: 1px solid #d5dbd4; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; font-family: system-ui, sans-serif;"> <span style="font-weight: bold; color: #003262; font-size: 1.1rem;"> SpotScout Berkeley</span> <a href="tutoring.html" style="font-family: system-ui, sans-serif; font-weight: 600; background: #fdb515; color: #1d2a24; border: 0; border-radius: 6px; padding: 8px 14px; text-decoration: none; font-size: 0.9rem;"> Find Nearest Tutor</a> </nav>  
 <main>
   <h1>What's the closest study spot to you?</h1>
   <p class="sub">Share your location and get walking directions to the nearest spot on the Berkeley campus.</p>
@@ -64,7 +67,10 @@
     <p class="dist" id="r-dist"></p>
     <a class="btn" id="r-dir" target="_blank" rel="noopener">Get walking directions</a>
   </section>
-
+  <section id="map-wrap">
+  <iframe id="map" title="Map of Berkeley campus study spots" src="https://www.google.com/maps?q=37.8719,-122.2585&z=15&output=embed" loading="lazy"allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <p id="map-caption">Berkeley campus. Find your nearest spot to see a walking route here.</p>
+</section>
   <h3 id="list-title" hidden>All spots by distance</h3>
   <ul id="all"></ul>
   
@@ -109,6 +115,9 @@ function dirUrl(from, to) {
   return "https://www.google.com/maps/dir/?api=1&origin=" + from.lat + "," + from.lng +
          "&destination=" + to.lat + "," + to.lng + "&travelmode=walking";
 }
+function embedRouteUrl(from, to) {
+  return "https://maps.google.com/maps?saddr=" + from.lat + "," + from.lng + "&daddr=" + to.lat + "," + to.lng + "&dirflg=w&output=embed";
+}
 
 const statusEl = document.getElementById("status");
 
@@ -123,6 +132,9 @@ function show(user) {
   document.getElementById("r-dist").textContent = fmt(best.dist) + " away (straight line)";
   document.getElementById("r-dir").href = dirUrl(user, best);
   document.getElementById("result").style.display = "block";
+  
+  document.getElementById("map").src = embedRouteUrl(user, best);
+  document.getElementById("map-caption").textContent = "Walking route to " + best.name + ".";
 
   const ul = document.getElementById("all");
   ul.innerHTML = "";
