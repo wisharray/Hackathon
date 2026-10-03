@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Nearest Tutor | Study Scout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <a href="index.html" class="text-blue-300 hover:text-white text-xs font-semibold uppercase tracking-wider">← Back to Study Scout Home</a>
+                <h1 class="text-2xl font-bold mt-1">📍 Find the Nearest Tutor</h1>
+            </div>
+            <div id="live-clock" class="text-right text-xs bg-blue-800 px-3 py-2 rounded-lg border border-blue-700"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- Filter Tabs & Nearest Location Trigger -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex gap-2">
+                <button onclick="filterCourse('all')" class="px-4 py-2 text-sm font-bold bg-blue-600 text-white rounded-lg shadow-xs transition">All Subjects</button>
+                <button onclick="filterCourse('61A')" class="px-4 py-2 text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">CS61A</button>
+                <button onclick="filterCourse('61B')" class="px-4 py-2 text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">CS61B</button>
+            </div>
+            <button onclick="findNearestTutor()" class="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition flex items-center justify-center gap-2">
+                ⚡ Sort by Nearest to Me
+            </button>
+        </div>
+
+        <!-- Tutoring Cards Container -->
+        <div id="tutor-list" class="space-y-4">
+            <!-- JS injects cards here -->
+        </div>
+
+    </main>
+
+    <script>
+        // Database featuring both CS61A and CS61B
+        const tutors = [
+            {
+                name: "CS61A Staff Drop-in Hours",
+                course: "61A",
+                location: "Soda Hall 275 (CS Lounge)",
+                time: "Today: 1:00 PM - 5:00 PM",
+                fullness: "Moderate Wait",
+                distance: "0.3 miles away",
+                link: "https://cs61a.org/fa26/calendar/"
+            },
+            {
+                name: "CS61B Data Structures Lab Mentors",
+                course: "61B",
+                location: "Soda Hall 311 / Cory Hall",
+                time: "Today: 2:00 PM - 6:00 PM",
+                fullness: "Packed",
+                distance: "0.4 miles away",
+                link: "https://sp24.datastructur.es/"
+            },
+            {
+                name: "Center for Access to Engineering Excellence (CAEE)",
+                course: "General",
+                location: "325 Davis Hall",
+                time: "Open until 6:00 PM",
+                fullness: "Plenty of Space",
+                distance: "0.6 miles away",
+                link: "https://engineering.berkeley.edu/students/academic-support/tutoring/"
+            },
+            {
+                name: "HKN Honor Society Tutoring",
+                course: "61B",
+                location: "Cory Hall Mezzanine",
+                time: "Drop-in Afternoon Hours",
+                fullness: "Quiet",
+                distance: "0.4 miles away",
+                link: "https://hkn.eecs.berkeley.edu/tutor"
+            }
+        ];
+
+        function renderTutors(items) {
+            const container = document.getElementById('tutor-list');
+            container.innerHTML = '';
+
+            items.forEach(t => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded">CS ${t.course}</span>
+                                <span class="text-xs text-slate-500 font-semibold">📍 ${t.location}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900">${t.name}</h3>
+                            <p class="text-slate-600 text-sm mt-1">🕒 ${t.time}</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 w-full md:w-auto">
+                            <span class="text-xs font-medium px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+                                🚶‍♂️ ${t.distance} • ${t.fullness}
+                            </span>
+                            <a href="${t.link}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm text-center">
+                                View Details →
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCourse(courseCode) {
+            if(courseCode === 'all') {
+                renderTutors(tutors);
+            } else {
+                const filtered = tutors.filter(t => t.course === courseCode || t.course === "General");
+                renderTutors(filtered);
+            }
+        }
+
+        function findNearestTutor() {
+            // Simulated geolocation sort for hackathon demo
+            alert("Using your GPS location to sort tutors by distance...");
+            const sorted = [...tutors].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+            renderTutors(sorted);
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerHTML = `Current Time:<br><strong>${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        renderTutors(tutors);
+    </script>
+</body>
+</html>
