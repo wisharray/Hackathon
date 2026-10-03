@@ -75,7 +75,7 @@ const SPOTS = [
   { name: "Doe Library",            address: "Doe Library, Berkeley, CA 94720",          lat: 37.87250, lng: -122.25940 },
   { name: "Kresge Engineering Library", address: "110 Bechtel Engineering Center, Berkeley, CA 94720", lat: 37.87390, lng: -122.25890 },
   { name: "Main Stacks / Morrison",  address: "Morrison Library, Berkeley, CA 94720",    lat: 37.87290, lng: -122.25985 },
-  { name: "Cafe Strada",            address: "2300 College Ave, Berkeley, CA 94704",    lat: 37.86795, lng: -122.25965 }
+  { name: "Cafe Strada",            address: "2300 College Ave, Berkeley, CA 94704",    lat: 37.86795, lng: -122.25965 } 
 ];
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -126,7 +126,7 @@ function show(user) {
 
 document.getElementById("locate").addEventListener("click", () => {
   if (!navigator.geolocation) {
-    statusEl.textContent = "Your browser does not support location. Try a different browser.";
+    statusEl.textContent = "Your browser does not support location, maybe try using a different browser.";
     return;
   }
   statusEl.textContent = "Finding your location...";
