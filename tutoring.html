@@ -41,7 +41,19 @@
   h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 8px; color: var(--accent); }
   p.sub { margin: 0 0 28px; color: var(--muted); font-family: system-ui, sans-serif; }
   
-  /* Buttons & Filters */
+  /* Live Clock Widget */
+  #live-clock {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: #fff;
+    text-align: right;
+  }
+
+  /* Filter & Sort Bar */
   .filter-bar {
     display: flex;
     justify-content: space-between;
@@ -96,6 +108,7 @@
     gap: 12px;
   }
   .tutor-card h2 { margin: 0 0 4px; font-size: 1.3rem; color: var(--ink); font-family: Georgia, serif; }
+  
   .badge {
     font-family: system-ui, sans-serif;
     font-size: 0.75rem;
@@ -104,10 +117,30 @@
     border-radius: 4px;
     text-transform: uppercase;
   }
-  /* Distinct Badge Colors */
   .badge-61a { background: #dbeafe; color: #1e40af; } /* Blue for 61A */
-  .badge-61b { background: #fce7f3; color: #9d174d; } /* Pink/Magenta for 61B */
+  .badge-61b { background: #fce7f3; color: #9d174d; } /* Pink for 61B */
   .badge-gen { background: #e5e7eb; color: #374151; } /* Grey for General */
+
+  /* Status Pill Style matching your screenshot */
+  .status-pill {
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    background: #d1fae5;
+    color: #065f46;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
 
   .tutor-meta {
     margin: 0;
@@ -127,20 +160,23 @@
     font-family: system-ui, sans-serif;
     font-size: 0.9rem;
   }
-  #status { margin: 18px 0; color: var(--muted); font-family: system-ui, sans-serif; }
+  #status-msg { margin: 18px 0; color: var(--muted); font-family: system-ui, sans-serif; }
 </style>
 </head>
-<body>
+<body style="background: var(--bg);">
 
-<!-- Top Navigation Bar matching index.html -->
+<!-- Top Navigation Bar -->
 <nav>
   <a href="index.html" class="nav-brand">🌲 SpotScout Berkeley</a>
-  <a href="index.html" class="btn gold-btn" style="padding: 8px 14px; font-size: 0.9rem;">← Back to Study Spots</a>
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <div id="live-clock">Loading time...</div>
+    <a href="index.html" class="btn gold-btn" style="padding: 8px 12px; font-size: 0.85rem;">← Study Spots</a>
+  </div>
 </nav>
 
 <main>
   <h1>Find the Nearest Tutor</h1>
-  <p class="sub">Filter by course or sort by distance to find active in-person help right now.</p>
+  <p class="sub">Filter by course or check live availability to get help right now.</p>
 
   <!-- Filter & Sort Bar -->
   <div class="filter-bar">
@@ -152,7 +188,7 @@
     <button onclick="sortNearest()" class="gold-btn">⚡ Sort by Nearest</button>
   </div>
 
-  <div id="status" role="status" aria-live="polite"></div>
+  <div id="status-msg" role="status" aria-live="polite"></div>
 
   <!-- Tutor List Container -->
   <div id="tutor-container"></div>
@@ -166,7 +202,7 @@ const TUTORS = [
     badgeClass: "badge-61a",
     location: "Soda Hall 275 (CS Lounge)",
     time: "1:00 PM - 5:00 PM",
-    fullness: "Moderate Wait",
+    statusText: "Open Now",
     distance: "0.3 miles away",
     link: "https://cs61a.org/fa26/calendar/"
   },
@@ -176,7 +212,7 @@ const TUTORS = [
     badgeClass: "badge-61b",
     location: "Soda Hall 311 / Cory Hall",
     time: "2:00 PM - 6:00 PM",
-    fullness: "Packed",
+    statusText: "Open Now",
     distance: "0.4 miles away",
     link: "https://sp24.datastructur.es/"
   },
@@ -186,7 +222,7 @@ const TUTORS = [
     badgeClass: "badge-gen",
     location: "325 Davis Hall",
     time: "Open until 6:00 PM",
-    fullness: "Plenty of Space",
+    statusText: "Check Website",
     distance: "0.6 miles away",
     link: "https://engineering.berkeley.edu/students/academic-support/tutoring/"
   },
@@ -196,7 +232,7 @@ const TUTORS = [
     badgeClass: "badge-61b",
     location: "Cory Hall Mezzanine",
     time: "Drop-in Afternoon Hours",
-    fullness: "Quiet",
+    statusText: "Opens at 6 PM",
     distance: "0.4 miles away",
     link: "https://hkn.eecs.berkeley.edu/tutor"
   }
@@ -214,14 +250,18 @@ function renderTutors(list) {
             <span class="badge ${t.badgeClass}">CS ${t.course}</span>
             <h2>${t.name}</h2>
           </div>
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            ${t.statusText}
+          </div>
         </div>
         <p class="tutor-meta">
           <span>📍 ${t.location}</span>
           <span>🕒 ${t.time}</span>
         </p>
         <div class="tutor-footer">
-          <span style="color: var(--muted)">🚶‍♂️ ${t.distance} • <strong>${t.fullness}</strong></span>
-          <a class="btn" href="${t.link}" target="_blank" rel="noopener" style="padding: 6px 12px; font-size: 0.85rem;">View Schedule</a>
+          <span style="color: var(--muted)">🚶‍♂️ ${t.distance}</span>
+          <a class="btn" href="${t.link}" target="_blank" rel="noopener" style="padding: 6px 14px; font-size: 0.85rem; background: var(--accent);">Official Schedule →</a>
         </div>
       </div>
     `;
@@ -229,7 +269,6 @@ function renderTutors(list) {
 }
 
 function filterCourse(code) {
-  // Update button active states
   document.getElementById("btn-all").className = code === 'all' ? '' : 'secondary';
   document.getElementById("btn-61a").className = code === '61A' ? '' : 'secondary';
   document.getElementById("btn-61b").className = code === '61B' ? '' : 'secondary';
@@ -245,8 +284,16 @@ function filterCourse(code) {
 function sortNearest() {
   const sorted = [...TUTORS].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
   renderTutors(sorted);
-  document.getElementById("status").textContent = "Sorted by proximity!";
+  document.getElementById("status-msg").textContent = "Sorted by proximity!";
 }
+
+// Live Clock Script
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-clock').innerHTML = `Current Time:<br><strong>${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>`;
+}
+setInterval(updateClock, 1000);
+updateClock();
 
 // Initial render
 renderTutors(TUTORS);
